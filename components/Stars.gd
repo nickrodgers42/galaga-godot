@@ -48,8 +48,3 @@ func _process(delta):
 func _draw():
     for star in stars:
         draw_rect(Rect2(star.position, Vector2(1, 1)), star.color)
-
-
-func _on_MainMenu_controls_pressed():
-    print('stars')
-    moving = !moving

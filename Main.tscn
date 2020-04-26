@@ -13,5 +13,3 @@ star_colors = [ Color( 1, 1, 1, 1 ), Color( 0, 1, 0, 1 ), Color( 0, 1, 1, 1 ), C
 
 [node name="MainMenu" parent="." instance=ExtResource( 1 )]
 visible = false
-[connection signal="controls_pressed" from="MainMenu" to="Stars" method="_on_MainMenu_controls_pressed"]
-[connection signal="controls_pressed" from="MainMenu" to="." method="_on_MainMenu_controls_pressed"]
