@@ -1,14 +1,16 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
+[ext_resource path="res://screens/MainMenu.gd" type="Script" id=1]
 [ext_resource path="res://assets/images/logo.png" type="Texture" id=2]
 [ext_resource path="res://galagaTheme.tres" type="Theme" id=3]
 
-[sub_resource type="Theme" id=9]
+[sub_resource type="Theme" id=1]
 
 [node name="MainMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 3 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -29,34 +31,34 @@ __meta__ = {
 }
 
 [node name="NewGameButton" type="Button" parent="VBoxContainer"]
-margin_top = 5.0
+margin_top = 8.0
 margin_right = 128.0
-margin_bottom = 21.0
+margin_bottom = 24.0
 text = "New Game"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HighScoresButton" type="Button" parent="VBoxContainer"]
-margin_top = 37.0
+margin_top = 40.0
 margin_right = 128.0
-margin_bottom = 59.0
-theme = SubResource( 9 )
+margin_bottom = 56.0
+theme = SubResource( 1 )
 text = "High Scores"
 
 [node name="ControlsButton" type="Button" parent="VBoxContainer"]
-margin_top = 75.0
+margin_top = 72.0
 margin_right = 128.0
-margin_bottom = 91.0
+margin_bottom = 88.0
 text = "Controls"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AboutButton" type="Button" parent="VBoxContainer"]
-margin_top = 107.0
+margin_top = 104.0
 margin_right = 128.0
-margin_bottom = 123.0
+margin_bottom = 120.0
 text = "About"
 __meta__ = {
 "_edit_use_anchors_": false
