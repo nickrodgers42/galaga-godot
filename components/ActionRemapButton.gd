@@ -14,7 +14,6 @@ func set_action(new_action):
     display_current_key()
 
 func _toggled(button_pressed):
-    print(button_pressed)
     set_process_unhandled_key_input(button_pressed)
     if button_pressed:
         text = "... Key"

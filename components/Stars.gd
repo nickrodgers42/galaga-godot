@@ -1,7 +1,7 @@
 extends Node2D
 
 export(int) var num_stars = 100
-export(bool) var moving = false
+export(bool) var moving = false setget set_moving
 export(float) var move_rate = 0
 export(float) var star_blink_rate = 1
 export(Array, Color) var star_colors = [Color(1, 1, 1)]
@@ -25,6 +25,9 @@ func _ready():
         star.opacity = randf()
         star.increasing = bool(randi() % 2)
         stars.append(star)
+
+func set_moving(move_val):
+    moving = move_val
 
 func _process(delta):
     for star in stars:

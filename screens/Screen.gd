@@ -1,6 +1,6 @@
+class_name Screen
 extends Control
 
-class_name Screen
 
 class NavigationButton:
     var button = Node.new()

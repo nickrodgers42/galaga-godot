@@ -1,0 +1,79 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://galagaTheme.tres" type="Theme" id=1]
+[ext_resource path="res://Lives.gd" type="Script" id=2]
+[ext_resource path="res://PlayerOneLabel.gd" type="Script" id=3]
+[ext_resource path="res://StageBadge.gd" type="Script" id=4]
+[ext_resource path="res://HUD.gd" type="Script" id=5]
+[ext_resource path="res://HUDTheme.tres" type="Theme" id=6]
+
+[node name="HUD" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 6 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Lives" type="Control" parent="."]
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StageBadge" type="Control" parent="."]
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PlayerOneLabel" type="Label" parent="."]
+margin_left = 32.0
+margin_right = 56.0
+margin_bottom = 8.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "1UP"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BlinkTimer" type="Timer" parent="PlayerOneLabel"]
+
+[node name="HighScoreLabel" type="Label" parent="."]
+margin_left = 80.0
+margin_right = 160.0
+margin_bottom = 8.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "HIGH SCORE"
+
+[node name="PlayerScore" type="Label" parent="."]
+margin_left = 40.0
+margin_top = 8.0
+margin_right = 56.0
+margin_bottom = 16.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+text = "00"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HighScore" type="Label" parent="."]
+margin_left = 120.0
+margin_top = 8.0
+margin_right = 136.0
+margin_bottom = 16.0
+text = "00"
+
+[node name="StageLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+custom_colors/font_color = Color( 0, 1, 1, 1 )
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

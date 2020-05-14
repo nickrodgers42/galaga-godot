@@ -2,7 +2,9 @@ extends Node
 
 var screens = {
     'main-menu': preload("res://screens/MainMenu.tscn").instance(),
-    'controls': preload("res://screens/ControlsScreen.tscn").instance()
+    'controls': preload("res://screens/ControlsScreen.tscn").instance(),
+    'about': preload('res://screens/AboutScreen.tscn').instance(),
+    'game': preload('res://Galaga.tscn').instance()
 }
 
 var current_screen = ""
@@ -10,6 +12,8 @@ var screen_stack = []
 
 func _ready():
     change_screen("main-menu")
+    screens['game'].connect("ship_flying", $Stars, "set_moving", [true])
+    screens['game'].connect("ship_stopped", $Stars, "set_moving", [false])
 
 func change_screen(screen):
     call_deferred("_change_screen_deferred", screen)
