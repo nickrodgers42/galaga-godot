@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://game/Galaga.gd" type="Script" id=1]
+[ext_resource path="res://assets/audio/shoot.wav" type="AudioStream" id=2]
+[ext_resource path="res://assets/audio/theme-song.wav" type="AudioStream" id=3]
+[ext_resource path="res://game/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://game/HUD/Pause.gd" type="Script" id=5]
+[ext_resource path="res://assets/audio/coin.wav" type="AudioStream" id=6]
+[ext_resource path="res://game/HUD/HUD.tscn" type="PackedScene" id=7]
+[ext_resource path="res://screens/PauseScreen.tscn" type="PackedScene" id=8]
+
+[node name="Galaga" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Shoot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+bus = "Sound Effects"
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+
+[node name="CoinInserted" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+bus = "Music"
+
+[node name="ThemeSong" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "Music"
+
+[node name="HUD" parent="." instance=ExtResource( 7 )]
+margin_right = 224.0
+margin_bottom = 288.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="PauseOverlay" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/PauseOverlay"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.686275 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PauseScreen" parent="CanvasLayer/PauseOverlay" instance=ExtResource( 8 )]

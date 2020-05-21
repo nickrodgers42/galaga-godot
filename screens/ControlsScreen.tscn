@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://galagaTheme.tres" type="Theme" id=1]
 [ext_resource path="res://screens/ControlsScreen.gd" type="Script" id=2]
 [ext_resource path="res://components/ActionRemapComponent.tscn" type="PackedScene" id=3]
+[ext_resource path="res://components/AudioToggle.tscn" type="PackedScene" id=4]
 
 [node name="ControlsScreen" type="Control"]
 anchor_right = 1.0
@@ -19,9 +20,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -80.0
-margin_top = -38.0
+margin_top = -68.0
 margin_right = 80.0
-margin_bottom = 38.0
+margin_bottom = 68.0
 custom_constants/separation = 4
 __meta__ = {
 "_edit_use_anchors_": false
@@ -58,14 +59,16 @@ label_text = "Pause"
 button_text = "pause"
 button_action = "pause"
 
-[node name="BackButton" type="Button" parent="VBoxContainer"]
-margin_top = 80.0
-margin_right = 160.0
-margin_bottom = 96.0
-text = "Back"
+[node name="MusicToggle" parent="VBoxContainer" instance=ExtResource( 4 )]
+audio_bus = "Music"
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="SoundEfffectsToggle" parent="VBoxContainer" instance=ExtResource( 4 )]
+margin_top = 100.0
+margin_bottom = 116.0
+audio_bus = "Sound Effects"
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+margin_top = 120.0
 margin_right = 160.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+margin_bottom = 136.0
+text = "Back"

@@ -4,16 +4,19 @@ var screens = {
     'main-menu': preload("res://screens/MainMenu.tscn").instance(),
     'controls': preload("res://screens/ControlsScreen.tscn").instance(),
     'about': preload('res://screens/AboutScreen.tscn').instance(),
-    'game': preload('res://Galaga.tscn').instance()
+    'game': preload('res://game/Galaga.tscn').instance()
 }
 
 var current_screen = ""
 var screen_stack = []
 
-func _ready():
-    change_screen("main-menu")
+func connect_game_signals():
     screens['game'].connect("ship_flying", $Stars, "set_moving", [true])
     screens['game'].connect("ship_stopped", $Stars, "set_moving", [false])
+    screens['game'].connect("quit_game", self, "quit_game")
+
+func _ready():
+    change_screen("main-menu")
 
 func change_screen(screen):
     call_deferred("_change_screen_deferred", screen)
@@ -40,6 +43,12 @@ func _change_screen_deferred(screen):
         container.remove_child(child)
     container.add_child(screens[current_screen])
     connect_navigation_buttons(screens[current_screen])
+    if current_screen == "game":
+        connect_game_signals()
+
+func quit_game():
+    change_screen("main-menu")
+    screens['game'] = preload('res://game/Galaga.tscn').instance()
 
 func connect_navigation_buttons(screen):
     if "navigation_buttons" in screen:

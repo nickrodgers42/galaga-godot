@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Area2D",
 "class": "PlayerMissile",
 "language": "GDScript",
-"path": "res://PlayerMissile.gd"
+"path": "res://game/PlayerMissile.gd"
 }, {
 "base": "Control",
 "class": "Screen",
@@ -35,6 +35,10 @@ _global_script_class_icons={
 config/name="Galaga"
 run/main_scene="res://Main.tscn"
 config/icon="res://favicon.png"
+
+[autoload]
+
+Controller="*res://Controller.gd"
 
 [display]
 

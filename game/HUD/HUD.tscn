@@ -1,30 +1,30 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://galagaTheme.tres" type="Theme" id=1]
-[ext_resource path="res://Lives.gd" type="Script" id=2]
-[ext_resource path="res://PlayerOneLabel.gd" type="Script" id=3]
-[ext_resource path="res://StageBadge.gd" type="Script" id=4]
-[ext_resource path="res://HUD.gd" type="Script" id=5]
-[ext_resource path="res://HUDTheme.tres" type="Theme" id=6]
+[ext_resource path="res://game/HUD/Lives.gd" type="Script" id=1]
+[ext_resource path="res://galagaTheme.tres" type="Theme" id=2]
+[ext_resource path="res://game/HUD/HUD.gd" type="Script" id=3]
+[ext_resource path="res://game/HUD/PlayerOneLabel.gd" type="Script" id=4]
+[ext_resource path="res://game/HUD/HUDTheme.tres" type="Theme" id=5]
+[ext_resource path="res://game/HUD/StageBadge.gd" type="Script" id=6]
 
 [node name="HUD" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 6 )
-script = ExtResource( 5 )
+theme = ExtResource( 5 )
+script = ExtResource( 3 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_use_anchors_": false
 }
 
 [node name="Lives" type="Control" parent="."]
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="StageBadge" type="Control" parent="."]
-script = ExtResource( 4 )
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -35,7 +35,7 @@ margin_right = 56.0
 margin_bottom = 8.0
 custom_colors/font_color = Color( 1, 0, 0, 1 )
 text = "1UP"
-script = ExtResource( 3 )
+script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -70,7 +70,7 @@ text = "00"
 [node name="StageLabel" type="Label" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 1 )
+theme = ExtResource( 2 )
 custom_colors/font_color = Color( 0, 1, 1, 1 )
 align = 1
 valign = 1
