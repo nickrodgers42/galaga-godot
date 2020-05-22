@@ -7,3 +7,4 @@
 [node name="PathMaker" type="Node2D" parent="."]
 
 [node name="EnemyGrid" parent="." instance=ExtResource( 1 )]
+show_grid_positions = true

@@ -6,7 +6,7 @@ class NavigationButton:
     var button = Node.new()
     var signal_name = ""
     var screen_name = ""
-    
+
     func _init(_button, _signal_name, _screen_name):
         self.button = _button
         self.signal_name = _signal_name

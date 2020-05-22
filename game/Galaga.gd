@@ -23,7 +23,7 @@ func _ready():
 func _start_game():
     $HUD.set_stage_text("PLAYER 1")
     var theme_song_length = $ThemeSong.stream.get_length()
-    
+
     var show_player_timer = Timer.new()
     show_player_timer.one_shot = true
     show_player_timer.connect("timeout", $Player, "show")
@@ -31,24 +31,24 @@ func _start_game():
     show_player_timer.connect("timeout", $HUD, "set_lives_visible", [true])
     add_child(show_player_timer)
     show_player_timer.start(theme_song_length / 2)
-    
+
     var move_stars_timer = Timer.new()
     move_stars_timer.one_shot = true
     move_stars_timer.connect("timeout", self, "emit_signal", ["ship_flying"])
     move_stars_timer.connect("timeout", $HUD, "set_stage_text", ["STAGE 1"])
     add_child(move_stars_timer)
     move_stars_timer.start((theme_song_length / 2) + 1)
-    
+
     var clear_text_timer = Timer.new()
     clear_text_timer.one_shot = true
     clear_text_timer.connect("timeout", $HUD, "clear_stage_text")
     add_child(clear_text_timer)
-    
+
     $ThemeSong.connect("finished", $Player, "set_can_shoot", [true])
     $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE 1"])
     $ThemeSong.connect("finished", clear_text_timer, "start", [1])
     $ThemeSong.play()
-    
+
 func _fire_player_missile():
     if len(missiles) < 2 and $Player.can_shoot:
         $Shoot.play()
