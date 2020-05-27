@@ -9,6 +9,26 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Enemy",
+"class": "Bee",
+"language": "GDScript",
+"path": "res://game/enemies/Bee.gd"
+}, {
+"base": "Enemy",
+"class": "Boss",
+"language": "GDScript",
+"path": "res://game/enemies/Boss.gd"
+}, {
+"base": "Enemy",
+"class": "Butterfly",
+"language": "GDScript",
+"path": "res://game/enemies/Butterfly.gd"
+}, {
+"base": "Area2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://game/enemies/Enemy.gd"
+}, {
 "base": "",
 "class": "GitAPI",
 "language": "NativeScript",
@@ -25,6 +45,10 @@ _global_script_classes=[ {
 "path": "res://screens/Screen.gd"
 } ]
 _global_script_class_icons={
+"Bee": "",
+"Boss": "",
+"Butterfly": "",
+"Enemy": "",
 "GitAPI": "",
 "PlayerMissile": "",
 "Screen": ""

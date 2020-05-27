@@ -48,6 +48,7 @@ func _change_screen_deferred(screen):
 
 func quit_game():
     change_screen("main-menu")
+    $Stars.set_moving(false)
     screens['game'] = preload('res://game/Galaga.tscn').instance()
 
 func connect_navigation_buttons(screen):

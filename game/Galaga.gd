@@ -9,7 +9,7 @@ var score = 0
 var missiles = []
 var screen_size
 const PlayerMissile = preload('res://game/PlayerMissile.tscn')
-
+const EnemyExplosion = preload('./enemies/EnemyExplosion.tscn')
 func _ready():
     screen_size = get_viewport_rect().size
     $Player.connect("player_fire", self, "_fire_player_missile")
@@ -45,6 +45,7 @@ func _start_game():
     add_child(clear_text_timer)
 
     $ThemeSong.connect("finished", $Player, "set_can_shoot", [true])
+    $ThemeSong.connect("finished", $EnemySystem/EnemyGrid, "set_moving", [true])
     $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE 1"])
     $ThemeSong.connect("finished", clear_text_timer, "start", [1])
     $ThemeSong.play()
@@ -55,8 +56,24 @@ func _fire_player_missile():
         var missile = PlayerMissile.instance()
         missile.position = $Player.position
         missile.position.y -= 8
+        missile.connect("area_entered", self, "missile_hit", [missile])
         add_child(missile)
         missiles.append(missile)
+
+func place_explosion(pos):
+    var explosion = EnemyExplosion.instance()
+    explosion.position = pos
+    explosion.connect("animation_finished", explosion, "queue_free")
+    add_child(explosion)
+    explosion.playing = true
+
+func missile_hit(area_2d, missile):
+    if area_2d.get_class() == "Enemy":
+        var enemy = area_2d
+        missiles.erase(missile)
+        missile.queue_free()
+        enemy.is_alive = false
+        place_explosion(enemy.get_position())
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):

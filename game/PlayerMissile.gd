@@ -3,6 +3,9 @@ extends Area2D
 
 export(int) var move_rate = 150
 
+func get_class():
+    return "PlayerMissile"
+
 func _ready():
     pass # Replace with function body.
 

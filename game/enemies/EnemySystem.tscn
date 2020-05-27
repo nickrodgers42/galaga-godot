@@ -1,10 +1,15 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://game/enemies/EnemyGrid.tscn" type="PackedScene" id=1]
+[ext_resource path="res://game/enemies/EnemySystem.gd" type="Script" id=2]
+[ext_resource path="res://game/enemies/PathMaker.gd" type="Script" id=3]
 
 [node name="EnemySystem" type="Node2D"]
+script = ExtResource( 2 )
 
 [node name="PathMaker" type="Node2D" parent="."]
+script = ExtResource( 3 )
 
 [node name="EnemyGrid" parent="." instance=ExtResource( 1 )]
-show_grid_positions = true
+position = Vector2( -1, 0 )
+moving = true
