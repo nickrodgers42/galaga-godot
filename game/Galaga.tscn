@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://game/Galaga.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/shoot.wav" type="AudioStream" id=2]
@@ -9,6 +9,8 @@
 [ext_resource path="res://game/HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://screens/PauseScreen.tscn" type="PackedScene" id=8]
 [ext_resource path="res://game/enemies/EnemySystem.tscn" type="PackedScene" id=9]
+[ext_resource path="res://assets/audio/enemy-hit.wav" type="AudioStream" id=10]
+[ext_resource path="res://assets/audio/enemy-kill.wav" type="AudioStream" id=11]
 
 [node name="Galaga" type="Node2D"]
 script = ExtResource( 1 )
@@ -53,3 +55,12 @@ __meta__ = {
 }
 
 [node name="PauseScreen" parent="CanvasLayer/PauseOverlay" instance=ExtResource( 8 )]
+
+[node name="EnemyKill" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+bus = "Sound Effects"
+
+[node name="EnemyHit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+volume_db = -10.097
+bus = "Sound Effects"

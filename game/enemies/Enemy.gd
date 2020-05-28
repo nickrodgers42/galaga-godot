@@ -20,6 +20,9 @@ var frame = 0
 func get_class():
     return "Enemy"
 
+func get_points():
+    return 50
+
 func set_state(state_str):
     if state_str == "diving":
         state = diving

@@ -60,7 +60,7 @@ var stages = {
            ])
         ],
         [
-           Wave.new("Bee", 8, "bee-1", Vector2(), [
+           Wave.new("Bee", 8, "butterfly-1", Vector2(), [
                 Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
                 Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
            ])
@@ -79,7 +79,6 @@ func _ready():
     spawn_timer.connect("timeout", self, "spawn_enemy")
     add_child(phase_timer)
     add_child(spawn_timer)
-    run_stage(1)
 
 func run_stage(stage_number):
     current_stage = stage_number
@@ -123,7 +122,7 @@ func spawn_enemy():
     if !phase_enemies_remaining:
         spawn_timer.stop()
 
-func _process(delta):
+func _process(_delta):
     if !$PathMaker.finished_queue.empty():
         var finished = $PathMaker.get_finished_queue()
         for enemy in finished:
