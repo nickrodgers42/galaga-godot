@@ -15,7 +15,7 @@ var diving_paths = [
     "butterfly-dive-left-1",
     "butterfly-dive-right-1",
 ]
-var diving_path_continues = {
+var path_continues = {
     "butterfly-dive-left-1" : "return-left-1",
     "butterfly-dive-right-1": "return-right-1"
 }
@@ -31,7 +31,8 @@ func _ready():
         floor(screen_size.x / 2),
         floor(screen_size.y / 2)
     )
-    curves = make_curves()
+    curve_points = CurvePoints.make_curve_points(screen_size, enemy_size)
+    curves = make_curves(curve_points)
     paths = make_paths(curves)
     for path in paths.keys():
         add_child(paths[path])
@@ -62,128 +63,10 @@ func make_curve(points, offset=Vector2()):
         curve.add_point(point[0] + offset, point[1], point[2])
     return curve
 
-func make_curves():
-    curve_points = {
-        'bee-1': [
-            [
-                Vector2(screen_center.x + enemy_size, 0),
-                Vector2(),
-                Vector2(0, 2 * enemy_size)
-            ],
-            [
-                Vector2(1.5 * enemy_size, screen_center.y),
-                Vector2(0, -3 * enemy_size),
-                Vector2(0, 3 * enemy_size)
-            ],
-            [
-                Vector2(screen_center.x - 1.5 * enemy_size, screen_center.y),
-                Vector2(0, 3 * enemy_size),
-                Vector2()
-            ]
-        ],
-        'boss-butterfly-1': [
-            [
-                Vector2(0, screen_size.y - 2.5 * enemy_size),
-                Vector2(),
-                Vector2(2 * enemy_size, 0)
-            ],
-            [
-                Vector2(screen_center.x - 1.5 * enemy_size, screen_center.y * 1.25),
-                Vector2(0, 2.5 * enemy_size),
-                Vector2(0, -2.5 * enemy_size)
-            ],
-            [
-                Vector2(1.5 * enemy_size, 1.25 * screen_center.y),
-                Vector2(0, -2.5 * enemy_size),
-                Vector2(0, 2.5 * enemy_size)
-            ],
-            [
-                Vector2(screen_center.x - 1.5 * enemy_size, 1.25 * screen_center.y),
-                Vector2(0, 2.5 * enemy_size),
-                Vector2()
-            ]
-        ],
-        'bee-dive-left-1': [
-            [
-                Vector2(0, 0),
-                Vector2(),
-                Vector2(0, -enemy_size)
-            ],
-            [
-                Vector2(-1.5 * enemy_size, 0),
-                Vector2(0, -enemy_size),
-                Vector2(0, enemy_size)
-            ],
-            [
-                Vector2(screen_center.x, 2 * enemy_size),
-                Vector2(0, -enemy_size),
-                Vector2(0, enemy_size)
-            ],
-            [
-                Vector2(screen_center.x,  0.5 * screen_size.y - 1.5 * enemy_size),
-                Vector2(0, -4 * enemy_size),
-                Vector2(0, 4 * enemy_size)
-            ],
-            [
-                Vector2(0, 0.5 * screen_size.y - 1.5 * enemy_size),
-                Vector2(0, 4 * enemy_size),
-                Vector2()
-            ]
-        ],
-        'butterfly-dive-left-1': [
-            [
-                Vector2(0, 0),
-                Vector2(),
-                Vector2(0, -enemy_size)
-            ],
-            [
-                Vector2(-1.5 * enemy_size, 0),
-                Vector2(0, -enemy_size),
-                Vector2(0, enemy_size)
-            ],
-            [
-                Vector2(screen_center.x - 3 * enemy_size, 2 * enemy_size),
-                Vector2(0, -2 * enemy_size),
-                Vector2(0, 2 * enemy_size)
-            ],
-            [
-                Vector2(-2 * enemy_size, screen_center.y - 2 * enemy_size),
-                Vector2(0, -4 * enemy_size),
-                Vector2(0, 4 * enemy_size)
-            ],
-            [
-                Vector2(4 * enemy_size, 0.85 * screen_size.y),
-                Vector2(0, -4 * enemy_size),
-                Vector2(0, 4 * enemy_size)
-            ]
-        ],
-        'return-left-1': [
-            [
-                Vector2(0.25 * screen_size.x, 0),
-                Vector2(),
-                Vector2()
-            ],
-            [
-                Vector2(0.25 * screen_size.x - enemy_size, 0),
-                Vector2(enemy_size, 0),
-                Vector2()
-            ]
-        ]
-    }
-    curve_points['bee-dive-left-test'] = []
-    curve_points['butterfly-1'] = mirror_curve_horizontal(curve_points['bee-1'])
-    curve_points['butterfly-2'] = mirror_curve_horizontal(curve_points['boss-butterfly-1'])
-    curve_points['bee-dive-right-1'] = flip_curve_horizontal(curve_points['bee-dive-left-1'])
-    curve_points['butterfly-dive-right-1'] = flip_curve_horizontal(curve_points['butterfly-dive-left-1'])
-    curve_points['return-right-1'] = mirror_curve_horizontal(curve_points['return-left-1'])
-    var offset = Vector2(32, 40)
-    for point in curve_points['butterfly-dive-left-1']:
-        curve_points['bee-dive-left-test'].append([point[0] + offset, point[1], point[2]])
-
+func make_curves(points):
     var curves_dict = {}
-    for curve in curve_points.keys():
-        curves_dict[curve] = make_curve(curve_points[curve])
-
+    for curve in points.keys():
+        curves_dict[curve] = make_curve(points[curve])
     return curves_dict
 
 func make_paths(curves_dict):
@@ -234,45 +117,29 @@ func get_finished_queue():
     finished_queue.clear()
     return queue
 
-func _process(delta):
-    for path_name in path_follows.keys():
-        for path_follow in path_follows[path_name]:
+func update_path_follows(delta, path_follow_dict, remove_parent=false):
+    for path_name in path_follow_dict.keys():
+        for path_follow in path_follow_dict[path_name]:
             path_follow.offset += delta * move_rate
             if path_follow.unit_offset == 1:
                 for child in path_follow.get_children():
                     path_follow.remove_child(child)
-                    add_child(child)
-                    child.position = path_follow.position
-                    finished_queue.append(child)
-                    child.rotation = 0
-                path_follow.queue_free()
-                path_follows[path_name].erase(path_follow)
-    for diving_path_name in diving_path_follows.keys():
-        for diving_path_follow in diving_path_follows[diving_path_name]:
-            diving_path_follow.offset += delta * move_rate
-            if diving_path_follow.unit_offset == 1:
-                for child in diving_path_follow.get_children():
-                    diving_path_follow.remove_child(child)
-                    if diving_path_continues.has(diving_path_name):
-                        follow_path(child, diving_path_continues[diving_path_name])
+                    if path_continues.has(path_name):
+                        follow_path(child, path_continues[path_name])
                     else:
                         add_child(child)
-                        child.position= diving_path_follow.position
-                        finished_queue.append(child)
+                        child.position = path_follow.position
                         child.rotation = 0
-                diving_path_follows[diving_path_name].erase(diving_path_follow)
-                diving_path_follow.get_parent().queue_free()
-#    for diving_path_follow in diving_path_follows:
-#        diving_path_follow.offset += delta * move_rate
-#        if diving_path_follow.unit_offset == 1:
-#            for child in diving_path_follow.get_children():
-#                diving_path_follow.remove_child(child)
-#                add_child(child)
-#                child.position = diving_path_follow.position
-#                finished_queue.append(child)
-#                child.rotation = 0
-#            diving_path_follows.erase(diving_path_follow)
-#            diving_path_follow.get_parent().queue_free()
+                        finished_queue.append(child)
+                    path_follow_dict[path_name].erase(path_follow)
+                    if remove_parent:
+                        path_follow.get_parent().queue_free()
+                    else:
+                        path_follow.queue_free()
+
+func _process(delta):
+    update_path_follows(delta, path_follows)
+    update_path_follows(delta, diving_path_follows)
     update()
 
 func _draw():
