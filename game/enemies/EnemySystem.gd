@@ -9,9 +9,21 @@ export(int) var move_rate = 100
 var frame_timer = Timer.new()
 var phase_timer = Timer.new()
 var spawn_timer = Timer.new()
+var bee_dive_timer = Timer.new()
+var butterfly_dive_timer = Timer.new()
+var boss_dive_timer = Timer.new()
+var timers = [
+    frame_timer,
+    phase_timer,
+    spawn_timer,
+    bee_dive_timer,
+    butterfly_dive_timer,
+    boss_dive_timer
+]
 var phase_timer_length = 5
 var spawn_timer_length = 0.2
 var frame_timer_length = 0.5
+var bee_dive_timer_length = 8
 var phase = 0
 var current_stage = 0
 var current_phase = 0
@@ -71,14 +83,30 @@ func _ready():
     $PathMaker.move_rate = move_rate
     $EnemyGrid.enemy_move_rate = move_rate
 
+    for timer in timers:
+        add_child(timer)
+
     frame_timer.connect("timeout", self, "update_frame")
-    add_child(frame_timer)
 
     frame_timer.start(frame_timer_length)
     phase_timer.connect("timeout", self, "next_phase")
     spawn_timer.connect("timeout", self, "spawn_enemy")
-    add_child(phase_timer)
-    add_child(spawn_timer)
+
+    bee_dive_timer.connect("timeout", self, "enemy_dive", ["bee"])
+    butterfly_dive_timer.connect("timeout", self, "enemy_dive", ["butterfly"])
+    boss_dive_timer.connect("timeout", self, "enemy_dive", ["boss"])
+
+func get_left_or_right(grid_pos):
+    if grid_pos.y < $EnemyGrid.num_cols / 2:
+        return "left"
+    return "right"
+
+func enemy_dive(enemy_str):
+    if enemy_str == "bee":
+        var bee = $EnemyGrid.get_open_enemy(Vector2(4,0), Vector2(5,9))
+        if bee != null:
+            var side = get_left_or_right(bee.grid_position)
+            $PathMaker.follow_path(bee, 'bee-dive-%s-1' % side)
 
 func run_stage(stage_number):
     current_stage = stage_number
@@ -90,6 +118,7 @@ func next_phase():
     current_phase += 1
     if current_phase > len(stages[current_stage]):
         phase_timer.stop()
+        bee_dive_timer.start(bee_dive_timer_length)
     else:
         spawn_timer.start(spawn_timer_length)
 
@@ -116,7 +145,6 @@ func spawn_enemy():
                     enemy = Butterfly.instance()
             enemy.moving = true
             enemy.grid_position = grid_position
-            enemy.rotation = PI / 2
             enemies.append(enemy)
             $PathMaker.follow_path(enemy, wave.path_name, wave.follow_offset)
     if !phase_enemies_remaining:

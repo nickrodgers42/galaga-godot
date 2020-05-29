@@ -25,7 +25,7 @@ bus = "Sound Effects"
 
 [node name="CoinInserted" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
-bus = "Music"
+bus = "Sound Effects"
 
 [node name="ThemeSong" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 3 )

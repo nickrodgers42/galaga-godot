@@ -170,6 +170,33 @@ func _process(delta):
         place_enemies(delta)
     update()
 
+func count_neighbors(row, col):
+    var neighbor_count = 0
+    if col > 0 and grid[row][col - 1].has_enemy():
+        neighbor_count += 1
+    if col < num_cols - 1 and grid[row][col + 1].has_enemy():
+        neighbor_count += 1
+    if row > 0 and grid[row - 1][col].has_enemy():
+        neighbor_count += 1
+    if row < num_rows - 1 and grid[row - 1][col].has_enemy():
+        neighbor_count += 1
+    return neighbor_count
+
+func get_open_enemy(top_left, bottom_right):
+    var open_cells = []
+    for row in range(top_left.x, bottom_right.x + 1):
+        for col in range(top_left.y, bottom_right.y + 1):
+            if grid[row][col].has_enemy() and count_neighbors(row, col) <= 2:
+                open_cells.append(grid[row][col])
+    if len(open_cells) == 0:
+        return null
+    var rand_index = randi() % len(open_cells)
+    var enemy = open_cells[rand_index].enemy
+    open_cells[rand_index].enemy = null
+    remove_child(enemy)
+    return enemy
+
+
 func _draw():
     if show_grid:
         for row in grid:
