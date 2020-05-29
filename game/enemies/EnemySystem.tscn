@@ -1,8 +1,19 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://game/enemies/EnemyGrid.tscn" type="PackedScene" id=1]
 [ext_resource path="res://game/enemies/EnemySystem.gd" type="Script" id=2]
 [ext_resource path="res://game/enemies/PathMaker.gd" type="Script" id=3]
+[ext_resource path="res://assets/audio/enemy-incoming.wav" type="AudioStream" id=4]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 2.521, 25.21, -2.521, -25.21, 0.0834045, 1.21789, 1.2605, -23.9495, -1.2605, 23.9495, -36.4711, 3.7389, -1.89075, -39.7058, 1.89075, 39.7058, 61.2177, 46.5959, -1.2605, -41.5965, 1.2605, 41.5965, -65.4627, 126.638, 0, 0, 0, 0, 56.1757, 192.814 )
+}
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 58.0665, 3.10864, 24.5798, 0, -24.5798, 0, 38.5287, 37.1422 )
+}
 
 [node name="EnemySystem" type="Node2D"]
 script = ExtResource( 2 )
@@ -12,3 +23,15 @@ script = ExtResource( 3 )
 
 [node name="EnemyGrid" parent="." instance=ExtResource( 1 )]
 position = Vector2( -1, 0 )
+
+[node name="EnemyIncoming" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+bus = "Sound Effects"
+
+[node name="Path2D" type="Path2D" parent="."]
+position = Vector2( -1.26053, 0 )
+curve = SubResource( 1 )
+
+[node name="Path2D" type="Path2D" parent="Path2D"]
+position = Vector2( -11.3445, 0 )
+curve = SubResource( 2 )

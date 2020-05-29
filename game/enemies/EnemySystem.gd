@@ -4,7 +4,7 @@ const Bee = preload('./Bee.tscn')
 const Butterfly = preload('./Butterfly.tscn')
 const Boss = preload('./Boss.tscn')
 
-export(int) var move_rate = 100
+export(int) var move_rate = 150
 
 var frame_timer = Timer.new()
 var phase_timer = Timer.new()
@@ -21,9 +21,10 @@ var timers = [
     boss_dive_timer
 ]
 var phase_timer_length = 5
-var spawn_timer_length = 0.2
+var spawn_timer_length = 0.15
 var frame_timer_length = 0.5
 var bee_dive_timer_length = 8
+var butterfly_dive_timer_length = 12
 var phase = 0
 var current_stage = 0
 var current_phase = 0
@@ -107,6 +108,13 @@ func enemy_dive(enemy_str):
         if bee != null:
             var side = get_left_or_right(bee.grid_position)
             $PathMaker.follow_path(bee, 'bee-dive-%s-1' % side)
+            $EnemyIncoming.play()
+    elif enemy_str == "butterfly":
+        var butterfly = $EnemyGrid.get_open_enemy(Vector2(2, 0), Vector2(3, 9))
+        if butterfly != null:
+            var side = get_left_or_right(butterfly.grid_position)
+            $PathMaker.follow_path(butterfly, 'butterfly-dive-%s-1' % side)
+            $EnemyIncoming.play()
 
 func run_stage(stage_number):
     current_stage = stage_number
@@ -119,6 +127,7 @@ func next_phase():
     if current_phase > len(stages[current_stage]):
         phase_timer.stop()
         bee_dive_timer.start(bee_dive_timer_length)
+        butterfly_dive_timer.start(butterfly_dive_timer_length)
     else:
         spawn_timer.start(spawn_timer_length)
 
