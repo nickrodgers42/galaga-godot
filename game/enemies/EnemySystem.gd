@@ -25,6 +25,7 @@ var spawn_timer_length = 0.15
 var frame_timer_length = 0.5
 var bee_dive_timer_length = 8
 var butterfly_dive_timer_length = 12
+var boss_dive_timer_length = 16
 var phase = 0
 var current_stage = 0
 var current_phase = 0
@@ -115,6 +116,16 @@ func enemy_dive(enemy_str):
             var side = get_left_or_right(butterfly.grid_position)
             $PathMaker.follow_path(butterfly, 'butterfly-dive-%s-1' % side)
             $EnemyIncoming.play()
+    elif enemy_str == "boss":
+        var boss = $EnemyGrid.get_open_enemy(Vector2(1,0), Vector2(1,9))
+        if boss!= null:
+            var escorts = $EnemyGrid.get_escorts(boss.grid_position)
+            var side = get_left_or_right(boss.grid_position)
+            boss.num_escorts = len(escorts)
+            $PathMaker.follow_path(boss, "boss-dive-%s-1" % side)
+            for escort in escorts:
+                $PathMaker.follow_path(escort, "boss-dive-%s-1" % side)
+            $EnemyIncoming.play()
 
 func run_stage(stage_number):
     current_stage = stage_number
@@ -128,6 +139,7 @@ func next_phase():
         phase_timer.stop()
         bee_dive_timer.start(bee_dive_timer_length)
         butterfly_dive_timer.start(butterfly_dive_timer_length)
+        boss_dive_timer.start(boss_dive_timer_length)
     else:
         spawn_timer.start(spawn_timer_length)
 

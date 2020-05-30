@@ -139,16 +139,49 @@ func make_curve_points(screen, enemy):
                 Vector2(enemy_size, 0),
                 Vector2()
             ]
+        ],
+        'boss-dive-left-1': [
+            [
+                Vector2(0, 0),
+                Vector2(),
+                Vector2(0, -enemy_size)
+            ],
+            [
+                Vector2(-1.5 * enemy_size, 0),
+                Vector2(0, -enemy_size),
+                Vector2(0, enemy_size)
+            ],
+            [
+                Vector2(0, 0.5 * screen_center.y),
+                Vector2(0, -2.5 * enemy_size),
+                Vector2(0, 2.5 * enemy_size)
+            ],
+            [
+                Vector2(0.5 * screen_center.x, 0.5 * screen_center.y),
+                Vector2(0, 2.5 * enemy_size),
+                Vector2(0, -2.5 * enemy_size)
+            ],
+            [
+                Vector2(0, 0.5 * screen_center.y),
+                Vector2(0, -2.5 * enemy_size),
+                Vector2(0, 2.5 * enemy_size)
+            ],
+            [
+                Vector2(0.5 * screen_center.x, .9 * screen_size.y),
+                Vector2(0, -4 * enemy_size),
+                Vector2()
+            ]
         ]
     }
     curve_points['butterfly-1'] = _mirror_curve_horizontal(curve_points['bee-1'])
     curve_points['butterfly-2'] = _mirror_curve_horizontal(curve_points['boss-butterfly-1'])
     curve_points['bee-dive-right-1'] = _flip_curve_horizontal(curve_points['bee-dive-left-1'])
     curve_points['butterfly-dive-right-1'] = _flip_curve_horizontal(curve_points['butterfly-dive-left-1'])
+    curve_points['boss-dive-right-1'] = _flip_curve_horizontal(curve_points['boss-dive-left-1'])
     curve_points['return-right-1'] = _mirror_curve_horizontal(curve_points['return-left-1'])
     curve_points['bee-dive-left-test'] = []
     var offset = Vector2(32, 40)
-    for point in curve_points['butterfly-dive-left-1']:
+    for point in curve_points['boss-dive-left-1']:
         curve_points['bee-dive-left-test'].append([point[0] + offset, point[1], point[2]])
     return curve_points
 

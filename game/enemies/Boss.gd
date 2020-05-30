@@ -1,7 +1,6 @@
 class_name Boss
 extends Enemy
 
-var num_escorts = 0
 var has_been_hit = false
 
 func get_points():

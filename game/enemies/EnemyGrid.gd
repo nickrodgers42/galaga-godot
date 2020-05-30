@@ -100,6 +100,7 @@ func place_enemies(delta):
         else:
             enemy.rotation = 0
             enemy.position = cell_position
+            enemy.num_escorts = 0
             enemy.set_state("formation")
             grid[enemy.grid_position.x][enemy.grid_position.y].enemy = enemy
             enemies_to_place.erase(enemy)
@@ -181,6 +182,28 @@ func count_neighbors(row, col):
     if row < num_rows - 1 and grid[row - 1][col].has_enemy():
         neighbor_count += 1
     return neighbor_count
+
+func get_enemy(grid_pos):
+    var enemy = null
+    if grid_pos.x < num_rows and grid_pos.x >= 0:
+        if grid_pos.y < num_cols and grid_pos.y >= 0:
+            if grid[grid_pos.x][grid_pos.y].has_enemy():
+                enemy = grid[grid_pos.x][grid_pos.y].enemy
+                grid[grid_pos.x][grid_pos.y].enemy = null
+                remove_child(enemy)
+    return enemy
+
+func get_escorts(grid_pos):
+    var escorts = []
+    if grid_pos.x < num_rows:
+        var enemy = get_enemy(Vector2(grid_pos.x + 1, grid_pos.y))
+        if enemy != null:
+            escorts.append(enemy)
+        var side = -1 if grid_pos.y < num_cols / 2 else 1
+        var enemy2 = get_enemy(Vector2(grid_pos.x + 1, grid_pos.y + side))
+        if enemy2 != null:
+            escorts.append(enemy2)
+    return escorts
 
 func get_open_enemy(top_left, bottom_right):
     var open_cells = []

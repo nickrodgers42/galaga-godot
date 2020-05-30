@@ -16,6 +16,7 @@ var grid_position = Vector2()
 var moving = true
 var playing = false
 var frame = 0
+var num_escorts = 0
 
 func get_class():
     return "Enemy"

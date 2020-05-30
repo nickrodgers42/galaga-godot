@@ -14,10 +14,14 @@ var diving_paths = [
     "bee-dive-right-1",
     "butterfly-dive-left-1",
     "butterfly-dive-right-1",
+    "boss-dive-left-1",
+    "boss-dive-right-1"
 ]
 var path_continues = {
     "butterfly-dive-left-1" : "return-left-1",
-    "butterfly-dive-right-1": "return-right-1"
+    "butterfly-dive-right-1": "return-right-1",
+    "boss-dive-left-1": "return-left-1",
+    "boss-dive-right-1": "return-right-1"
 }
 
 var diving_path_follows = {}
@@ -139,7 +143,7 @@ func update_path_follows(delta, path_follow_dict, remove_parent=false):
 
 func _process(delta):
     update_path_follows(delta, path_follows)
-    update_path_follows(delta, diving_path_follows)
+    update_path_follows(delta, diving_path_follows, true)
     update()
 
 func _draw():
