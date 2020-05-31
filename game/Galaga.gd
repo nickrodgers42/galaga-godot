@@ -10,17 +10,29 @@ var high_score = 0
 var missiles = []
 var screen_size
 const PlayerMissile = preload('res://game/PlayerMissile.tscn')
+const EnemyMissile = preload('./EnemyMissile.tscn')
 const EnemyExplosion = preload('./enemies/EnemyExplosion.tscn')
 
 func _ready():
     screen_size = get_viewport_rect().size
     $Player.connect("player_fire", self, "_fire_player_missile")
+    $Player.connect("area_entered", self, "_player_hit")
     $CanvasLayer/PauseOverlay/PauseScreen.connect('quit_pressed', self, "emit_signal", ["quit_game"])
     $Player.position.y = floor(screen_size.y - $Player.sprite_size.y * 1.5)
     $Player.position.x = floor(screen_size.x / 2)
     $Player.hide()
     $CoinInserted.connect("finished", self, "_start_game")
     $CoinInserted.play()
+    $EnemySystem.connect("fire_enemy_missile", self, "_fire_enemy_missile")
+
+func player_hit(area_2d):
+    if area_2d.get_class() == "Enemy":
+        # kill enemy
+        pass
+    elif area_2d.get_class() == "EnemyMissile":
+        # remove missile
+        pass
+    # kill player
 
 func _start_game():
     $HUD.set_stage_text("PLAYER 1")
@@ -50,7 +62,7 @@ func _start_game():
     $ThemeSong.connect("finished", $EnemySystem/EnemyGrid, "set_moving", [true])
     $ThemeSong.connect("finished", $EnemySystem, "run_stage", [1])
     $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE 1"])
-    $ThemeSong.connect("finished", clear_text_timer, "start", [1])
+    $ThemeSong.connect("finished", clear_text_timer, "start", [stage])
     $ThemeSong.play()
 
 func _fire_player_missile():
@@ -62,6 +74,17 @@ func _fire_player_missile():
         missile.connect("area_entered", self, "missile_hit", [missile])
         add_child(missile)
         missiles.append(missile)
+
+func _fire_enemy_missile(enemy):
+    var missile = EnemyMissile.instance()
+    missile.position = enemy.position
+    missile.screen_size = screen_size
+    missile.shoot_towards_player($Player.position)
+    missile.position.y -= 8
+    # missile.connect("area_e")
+    add_child(missile)
+    missiles.append(missile)
+
 
 func place_explosion(pos):
     var explosion = EnemyExplosion.instance()

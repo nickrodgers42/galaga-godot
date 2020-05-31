@@ -112,6 +112,7 @@ func follow_path(enemy, path_name, offset=Vector2()):
         else:
             path_follows[path_name] = [path_follow]
         paths[path_name].add_child(path_follow)
+    return path_follow
 
 func get_finished_queue():
     var queue = []

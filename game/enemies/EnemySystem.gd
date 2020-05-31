@@ -1,5 +1,7 @@
 extends Node2D
 
+signal fire_enemy_missile
+
 const Bee = preload('./Bee.tscn')
 const Butterfly = preload('./Butterfly.tscn')
 const Boss = preload('./Boss.tscn')
@@ -30,6 +32,9 @@ var phase = 0
 var current_stage = 0
 var current_phase = 0
 var enemies = []
+var missile_timers = []
+var missile_timer_delay = 1
+var missile_spacing_delay = 0.15
 var global_frame = 0
 
 class Wave:
@@ -104,28 +109,39 @@ func get_left_or_right(grid_pos):
     return "right"
 
 func enemy_dive(enemy_str):
+    var enemy = null
+    var path_follow = null
     if enemy_str == "bee":
-        var bee = $EnemyGrid.get_open_enemy(Vector2(4,0), Vector2(5,9))
-        if bee != null:
-            var side = get_left_or_right(bee.grid_position)
-            $PathMaker.follow_path(bee, 'bee-dive-%s-1' % side)
-            $EnemyIncoming.play()
+        enemy = $EnemyGrid.get_open_enemy(Vector2(4,0), Vector2(5,9))
+        if enemy != null:
+            var side = get_left_or_right(enemy.grid_position)
+            path_follow = $PathMaker.follow_path(enemy, 'bee-dive-%s-1' % side)
     elif enemy_str == "butterfly":
-        var butterfly = $EnemyGrid.get_open_enemy(Vector2(2, 0), Vector2(3, 9))
-        if butterfly != null:
-            var side = get_left_or_right(butterfly.grid_position)
-            $PathMaker.follow_path(butterfly, 'butterfly-dive-%s-1' % side)
-            $EnemyIncoming.play()
+        enemy = $EnemyGrid.get_open_enemy(Vector2(2, 0), Vector2(3, 9))
+        if enemy != null:
+            var side = get_left_or_right(enemy.grid_position)
+            path_follow = $PathMaker.follow_path(enemy, 'butterfly-dive-%s-1' % side)
     elif enemy_str == "boss":
-        var boss = $EnemyGrid.get_open_enemy(Vector2(1,0), Vector2(1,9))
-        if boss!= null:
-            var escorts = $EnemyGrid.get_escorts(boss.grid_position)
-            var side = get_left_or_right(boss.grid_position)
-            boss.num_escorts = len(escorts)
-            $PathMaker.follow_path(boss, "boss-dive-%s-1" % side)
+        enemy = $EnemyGrid.get_open_enemy(Vector2(1,0), Vector2(1,9))
+        if enemy!= null:
+            var escorts = $EnemyGrid.get_escorts(enemy.grid_position)
+            var side = get_left_or_right(enemy.grid_position)
+            enemy.num_escorts = len(escorts)
+            path_follow = $PathMaker.follow_path(enemy, "boss-dive-%s-1" % side)
             for escort in escorts:
                 $PathMaker.follow_path(escort, "boss-dive-%s-1" % side)
-            $EnemyIncoming.play()
+    if enemy != null:
+        $EnemyIncoming.play()
+        set_missile_timers(path_follow)
+
+func set_missile_timers(enemy):
+    for i in range(2):
+        var timer = Timer.new()
+        add_child(timer)
+        timer.connect("timeout", self, "emit_signal", ["fire_enemy_missile", enemy])
+        timer.one_shot = true
+        timer.start(missile_timer_delay + i * missile_spacing_delay)
+        missile_timers.append(timer)
 
 func run_stage(stage_number):
     current_stage = stage_number
@@ -181,3 +197,7 @@ func _process(_delta):
         if !enemy.is_alive:
             enemies.erase(enemy)
             enemy.queue_free()
+    for timer in missile_timers:
+        if timer.is_stopped():
+            missile_timers.erase(timer)
+            timer.queue_free()
