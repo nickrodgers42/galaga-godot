@@ -7,11 +7,13 @@ signal quit_game
 var stage = 1
 var score = 0
 var high_score = 0
-var missiles = []
+var player_missiles = []
+var enemy_missiles = []
 var screen_size
 const PlayerMissile = preload('res://game/PlayerMissile.tscn')
 const EnemyMissile = preload('./EnemyMissile.tscn')
 const EnemyExplosion = preload('./enemies/EnemyExplosion.tscn')
+const PlayerExplosion = preload('./PlayerExplosion.tscn')
 
 func _ready():
     screen_size = get_viewport_rect().size
@@ -25,14 +27,39 @@ func _ready():
     $CoinInserted.play()
     $EnemySystem.connect("fire_enemy_missile", self, "_fire_enemy_missile")
 
-func player_hit(area_2d):
-    if area_2d.get_class() == "Enemy":
-        # kill enemy
-        pass
-    elif area_2d.get_class() == "EnemyMissile":
-        # remove missile
-        pass
-    # kill player
+func _player_hit(area_2d):
+    if $Player.visible:
+        if area_2d.get_class() == "Enemy":
+            area_2d.is_alive = false
+            kill_enemy(area_2d)
+        elif area_2d.get_class() == "EnemyMissile":
+            area_2d.queue_free()
+        kill_player()
+
+func kill_player():
+    $PlayerKill.play()
+    $Player.hide()
+    $Player.num_lives -= 1
+    var explosion = PlayerExplosion.instance()
+    add_child(explosion)
+    explosion.playing = true
+    explosion.position = $Player.position
+    $Player.position.x = screen_size.x / 2
+    explosion.connect("animation_finished", explosion, "queue_free")
+    $HUD.set_num_lives($Player.num_lives)
+    var show_text_timer = Timer.new()
+    show_text_timer.one_shot = true
+    show_text_timer.connect("timeout", $HUD, "set_stage_text", ["READY"])
+    add_child(show_text_timer)
+    var respawn_timer = Timer.new()
+    respawn_timer.one_shot = true
+    respawn_timer.connect("timeout", $Player, "show")
+    respawn_timer.connect("timeout", respawn_timer, "queue_free")
+    respawn_timer.connect("timeout", $HUD, "clear_stage_text")
+    add_child(respawn_timer)
+    var respawn_length = 5
+    show_text_timer.start(respawn_length / 2)
+    respawn_timer.start(respawn_length)
 
 func _start_game():
     $HUD.set_stage_text("PLAYER 1")
@@ -43,6 +70,8 @@ func _start_game():
     show_player_timer.connect("timeout", $Player, "show")
     show_player_timer.connect("timeout", $HUD, "set_badge_visible", [true])
     show_player_timer.connect("timeout", $HUD, "set_lives_visible", [true])
+    show_player_timer.connect("timeout", show_player_timer, "queue_free")
+
     add_child(show_player_timer)
     show_player_timer.start(theme_song_length / 2)
 
@@ -50,12 +79,14 @@ func _start_game():
     move_stars_timer.one_shot = true
     move_stars_timer.connect("timeout", self, "emit_signal", ["ship_flying"])
     move_stars_timer.connect("timeout", $HUD, "set_stage_text", ["STAGE 1"])
+    move_stars_timer.connect("timeout", move_stars_timer,"queue_free")
     add_child(move_stars_timer)
     move_stars_timer.start((theme_song_length / 2) + 1)
 
     var clear_text_timer = Timer.new()
     clear_text_timer.one_shot = true
     clear_text_timer.connect("timeout", $HUD, "clear_stage_text")
+    clear_text_timer.connect("timeout", clear_text_timer, "queue_free")
     add_child(clear_text_timer)
 
     $ThemeSong.connect("finished", $Player, "set_can_shoot", [true])
@@ -66,14 +97,14 @@ func _start_game():
     $ThemeSong.play()
 
 func _fire_player_missile():
-    if len(missiles) < 2 and $Player.can_shoot:
+    if len(player_missiles) < 2 and $Player.can_shoot:
         $Shoot.play()
         var missile = PlayerMissile.instance()
         missile.position = $Player.position
         missile.position.y -= 8
         missile.connect("area_entered", self, "missile_hit", [missile])
         add_child(missile)
-        missiles.append(missile)
+        player_missiles.append(missile)
 
 func _fire_enemy_missile(enemy):
     var missile = EnemyMissile.instance()
@@ -81,9 +112,8 @@ func _fire_enemy_missile(enemy):
     missile.screen_size = screen_size
     missile.shoot_towards_player($Player.position)
     missile.position.y -= 8
-    # missile.connect("area_e")
     add_child(missile)
-    missiles.append(missile)
+    enemy_missiles.append(missile)
 
 
 func place_explosion(pos):
@@ -100,21 +130,28 @@ func update_score(new_score):
         high_score = score
         $HUD.set_high_score(score)
 
+func kill_enemy(enemy):
+    enemy.is_alive = false
+    $EnemyKill.play()
+    update_score(score + enemy.get_points())
+    place_explosion(enemy.get_position())
+
 func missile_hit(area_2d, missile):
     if area_2d.get_class() == "Enemy":
         var enemy = area_2d
-        missiles.erase(missile)
+        player_missiles.erase(missile)
         missile.queue_free()
         enemy.hit()
         if !enemy.is_alive:
-            $EnemyKill.play()
-            update_score(score + enemy.get_points())
-            place_explosion(enemy.get_position())
+            kill_enemy(enemy)
         else:
             $EnemyHit.play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-    for missile in missiles:
+    for missile in player_missiles:
         if !is_instance_valid(missile):
-            missiles.erase(missile)
+            player_missiles.erase(missile)
+    for missile in enemy_missiles:
+        if !is_instance_valid(missile):
+            enemy_missiles.erase(missile)

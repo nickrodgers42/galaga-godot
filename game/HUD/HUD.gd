@@ -21,6 +21,9 @@ func set_badge_visible(visible):
 func set_lives_visible(visible):
     $Lives.visible = visible
 
+func set_num_lives(num_lives):
+    $Lives.num_lives = num_lives
+
 func _ready():
     screen_size = get_viewport_rect().size
     $StageBadge.visible = false

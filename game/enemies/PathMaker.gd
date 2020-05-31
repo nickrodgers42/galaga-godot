@@ -117,8 +117,9 @@ func follow_path(enemy, path_name, offset=Vector2()):
 func get_finished_queue():
     var queue = []
     for node in finished_queue:
-        remove_child(node)
-        queue.append(node)
+        if is_instance_valid(node):
+            remove_child(node)
+            queue.append(node)
     finished_queue.clear()
     return queue
 
