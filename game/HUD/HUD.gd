@@ -9,6 +9,9 @@ func clear_stage_text():
 func set_score(score):
     $PlayerScore.text = "%0*d" % [2, score]
 
+func set_stage_badge(stage):
+    $StageBadge.stage = stage
+
 func set_high_score(score):
     $HighScore.text = "%0*d" % [2, score]
 

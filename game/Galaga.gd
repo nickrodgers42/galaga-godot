@@ -10,7 +10,7 @@ var high_score = 0
 var player_missiles = []
 var enemy_missiles = []
 var screen_size
-const PlayerMissile = preload('res://game/PlayerMissile.tscn')
+const PlayerMissile = preload('./PlayerMissile.tscn')
 const EnemyMissile = preload('./EnemyMissile.tscn')
 const EnemyExplosion = preload('./enemies/EnemyExplosion.tscn')
 const PlayerExplosion = preload('./PlayerExplosion.tscn')
@@ -26,6 +26,7 @@ func _ready():
     $CoinInserted.connect("finished", self, "_start_game")
     $CoinInserted.play()
     $EnemySystem.connect("fire_enemy_missile", self, "_fire_enemy_missile")
+    $EnemySystem.connect("stage_complete", self, "transition_stage")
 
 func _player_hit(area_2d):
     if $Player.visible:
@@ -91,13 +92,26 @@ func _start_game():
 
     $ThemeSong.connect("finished", $Player, "set_can_shoot", [true])
     $ThemeSong.connect("finished", $EnemySystem/EnemyGrid, "set_moving", [true])
-    $ThemeSong.connect("finished", $EnemySystem, "run_stage", [1])
+    $ThemeSong.connect("finished", $EnemySystem, "run_stage", [stage])
     $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE 1"])
     $ThemeSong.connect("finished", clear_text_timer, "start", [stage])
     $ThemeSong.play()
 
+func transition_stage():
+    stage += 1
+    $LevelStart.play()
+    $HUD.set_stage_text("STAGE %d" % stage)
+    $HUD.set_stage_badge(stage)
+    var transition_timer = Timer.new()
+    transition_timer.one_shot = true
+    transition_timer.connect("timeout", $HUD, "clear_stage_text")
+    transition_timer.connect("timeout", $EnemySystem, "run_stage", [stage])
+    transition_timer.connect("timeout", transition_timer, "queue_free")
+    add_child(transition_timer)
+    transition_timer.start($LevelStart.stream.get_length() + 1)
+
 func _fire_player_missile():
-    if len(player_missiles) < 2 and $Player.can_shoot:
+    if len(player_missiles) < 2 and $Player.can_shoot and $Player.visible:
         $Shoot.play()
         var missile = PlayerMissile.instance()
         missile.position = $Player.position

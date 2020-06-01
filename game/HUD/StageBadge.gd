@@ -32,3 +32,6 @@ func _draw():
         var current_badge = stage_badges[i]
         x_position -= badges[current_badge].get_width()
         draw_texture(badges[current_badge], Vector2(x_position, screen_size.y - badges[current_badge].get_height()))
+
+func _process(delta):
+    update()

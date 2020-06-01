@@ -149,5 +149,5 @@ func _process(delta):
     update()
 
 func _draw():
-    draw_polyline(curves['bee-dive-left-test'].get_baked_points(), Color('#ff0000'))
-#    pass
+#    draw_polyline(curves['bee-dive-left-test'].get_baked_points(), Color('#ff0000'))
+    pass
