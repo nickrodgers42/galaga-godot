@@ -2,9 +2,6 @@ extends Button
 
 export(String) var action = "ui_up"
 
-var config = ConfigFile.new()
-var err = config.load("res://settings.cfg")
-
 func _ready():
     assert(InputMap.has_action(action))
     set_process_unhandled_key_input(false)

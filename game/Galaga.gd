@@ -3,6 +3,7 @@ extends Node2D
 signal ship_flying
 signal ship_stopped
 signal quit_game
+signal game_over
 
 var stage = 1
 var score = 0
@@ -14,6 +15,9 @@ const PlayerMissile = preload('./PlayerMissile.tscn')
 const EnemyMissile = preload('./EnemyMissile.tscn')
 const EnemyExplosion = preload('./enemies/EnemyExplosion.tscn')
 const PlayerExplosion = preload('./PlayerExplosion.tscn')
+
+var shots_fired = 0
+var shots_hit = 0
 
 func _ready():
     screen_size = get_viewport_rect().size
@@ -48,19 +52,38 @@ func kill_player():
     $Player.position.x = screen_size.x / 2
     explosion.connect("animation_finished", explosion, "queue_free")
     $HUD.set_num_lives($Player.num_lives)
-    var show_text_timer = Timer.new()
-    show_text_timer.one_shot = true
-    show_text_timer.connect("timeout", $HUD, "set_stage_text", ["READY"])
-    add_child(show_text_timer)
+
+    var respawn_length = 5
+
+    if $Player.num_lives > 0:
+        var show_text_timer = Timer.new()
+        show_text_timer.one_shot = true
+        show_text_timer.connect("timeout", $HUD, "set_stage_text", ["READY"])
+        add_child(show_text_timer)
+        show_text_timer.start(respawn_length / 2)
+
     var respawn_timer = Timer.new()
     respawn_timer.one_shot = true
     respawn_timer.connect("timeout", $Player, "show")
+    if $Player.num_lives == 0:
+        respawn_timer.connect("timeout", self, "show_end_screen")
+    else:
+        respawn_timer.connect("timeout", $HUD, "clear_stage_text")
     respawn_timer.connect("timeout", respawn_timer, "queue_free")
-    respawn_timer.connect("timeout", $HUD, "clear_stage_text")
     add_child(respawn_timer)
-    var respawn_length = 5
-    show_text_timer.start(respawn_length / 2)
     respawn_timer.start(respawn_length)
+
+func show_end_screen():
+    $GameOver.play()
+    remove_child($EnemySystem)
+    var accuracy_str = "SHOTS FIRED: %d\n" % shots_fired
+    accuracy_str += "SHOTS HIT: %d\n" % shots_hit
+    if shots_fired == 0:
+        shots_fired += 1
+    accuracy_str += "ACCURACY: %.2f%%" % ((float(shots_hit) / float(shots_fired)) * 100)
+    $HUD.set_stage_text(accuracy_str)
+    $GameOver.connect("finished", $HUD, "clear_stage_text")
+    $GameOver.connect("finished", self, "emit_signal", ["game_over", score])
 
 func _start_game():
     $HUD.set_stage_text("PLAYER 1")
@@ -101,7 +124,10 @@ func _start_game():
 func transition_stage():
     stage += 1
     $LevelStart.play()
-    $HUD.set_stage_text("STAGE %d" % stage)
+    if stage % 3 == 0:
+        $HUD.set_stage_text("CHALLENGING STAGE")
+    else:
+        $HUD.set_stage_text("STAGE %d" % stage)
     $HUD.set_stage_badge(stage)
     var transition_timer = Timer.new()
     transition_timer.one_shot = true
@@ -120,6 +146,7 @@ func _fire_player_missile():
         missile.connect("area_entered", self, "missile_hit", [missile])
         add_child(missile)
         player_missiles.append(missile)
+        shots_fired += 1
 
 func _fire_enemy_missile(enemy):
     var missile = EnemyMissile.instance()
@@ -157,6 +184,7 @@ func missile_hit(area_2d, missile):
         player_missiles.erase(missile)
         missile.queue_free()
         enemy.hit()
+        shots_hit += 1
         if !enemy.is_alive:
             kill_enemy(enemy)
         else:

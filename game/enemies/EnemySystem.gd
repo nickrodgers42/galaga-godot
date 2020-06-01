@@ -74,31 +74,31 @@ var stages = [
         Wave.new("Butterfly", 4, "butterfly-1", Vector2(), [
             Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
         ])
-    ],
-    [
-        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
-            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
-            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
-        ])
-    ],
-    [
-        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
-            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
-            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
-        ])
-    ],
-    [
-        Wave.new("Bee", 8, "bee-1", Vector2(), [
-            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
-            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
-        ])
-    ],
-    [
-        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
-            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
-            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
-        ])
     ]],
+#    [
+#        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
+#            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
+#            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
+#        ])
+#    ],
+#    [
+#        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
+#            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
+#            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
+#        ])
+#    ],
+#    [
+#        Wave.new("Bee", 8, "bee-1", Vector2(), [
+#            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
+#            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
+#        ])
+#    ],
+#    [
+#        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
+#            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
+#            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
+#        ])
+#    ]],
     [[
         Wave.new("Butterfly", 4, "bee-1", Vector2(), [
             Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
@@ -138,6 +138,38 @@ var stages = [
         Wave.new("Bee", 4, "butterfly-1", Vector2(0, enemy_size / 2), [
             Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
         ])
+    ]],
+    [[
+        Wave.new("Bee", 4, "bee-challenge-left-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+        ]),
+        Wave.new("Bee", 4, "bee-challenge-right-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+        ])
+    ],
+    [
+        Wave.new("Boss-Butterfly", 8, "boss-butterfly-challenge-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+            Vector2(),Vector2(),Vector2(),Vector2()
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "bee-challenge-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+            Vector2(),Vector2(),Vector2(),Vector2()
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "bee-challenge-left-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+            Vector2(),Vector2(),Vector2(),Vector2()
+        ]),
+    ],
+    [
+        Wave.new("Bee", 8, "bee-challenge-right-1", Vector2(), [
+            Vector2(),Vector2(),Vector2(),Vector2(),
+            Vector2(),Vector2(),Vector2(),Vector2()
+        ]),
     ]]
 ]
 
@@ -256,7 +288,7 @@ func spawn_enemy():
                 enemy.grid_position = grid_position
                 enemies.append(enemy)
                 var path_follow = $PathMaker.follow_path(enemy, wave.path_name, wave.follow_offset)
-                if phase_enemies_to_shoot > 0 and current_stage != 0:
+                if phase_enemies_to_shoot > 0 and current_stage == 1:
                     set_missile_timers(enemy, path_follow)
                     phase_enemies_to_shoot -= 1
     if phase_enemies_remaining <= 0:

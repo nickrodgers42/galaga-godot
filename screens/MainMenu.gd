@@ -9,7 +9,10 @@ signal about_pressed
 func _ready():
     navigation_buttons.append(
         NavigationButton.new($VBoxContainer/NewGameButton, "new_game_pressed", "game")
-       )
+    )
+    navigation_buttons.append(
+        NavigationButton.new($VBoxContainer/HighScoresButton, "high_scores_pressed", "high-scores")
+    )
     navigation_buttons.append(
         NavigationButton.new($VBoxContainer/ControlsButton, "controls_pressed", "controls")
     )

@@ -171,7 +171,61 @@ func make_curve_points(screen, enemy):
                 Vector2(0, -4 * enemy_size),
                 Vector2()
             ]
-        ]
+        ],
+        'bee-challenge-left-1': [
+            [
+                Vector2(screen_center.x + 1.5 * enemy_size, 0),
+                Vector2(),
+                Vector2(0, 1.5 * enemy_size)
+            ],
+            [
+                Vector2(screen_center.x - 1.5 * enemy_size, 0.75 * screen_size.y),
+                Vector2(enemy_size, -2 * enemy_size),
+                Vector2(-enemy_size, 2 * enemy_size)
+            ],
+            [
+                Vector2(1.5 * enemy_size, 0.75 * screen_size.y),
+                Vector2(0, 3 * enemy_size),
+                Vector2(0, -3 * enemy_size)
+            ],
+            [
+                Vector2(screen_size.x, screen_center.y - 2.5 * enemy_size),
+                Vector2(-2 * enemy_size, 0),
+                Vector2()
+            ]
+        ],
+        'boss-butterfly-challenge-1': [
+            [
+                Vector2(0, screen_size.y - 2.5 * enemy_size),
+                Vector2(),
+                Vector2(2 * enemy_size, 0)
+            ],
+            [
+                Vector2(0.75 * screen_size.x, screen_center.y),
+                Vector2(0, 2 * enemy_size),
+                Vector2(0, -2 * enemy_size)
+            ],
+            [
+                Vector2(0.75 * screen_size.x, 0.25 * screen_size.y),
+                Vector2(0, 2 * enemy_size),
+                Vector2(0, -2 * enemy_size)
+            ],
+            [
+                Vector2(0.75 * screen_size.x - 1.5 * enemy_size, 0.25 * screen_size.y),
+                Vector2(0, -2 * enemy_size),
+                Vector2(0, 2 * enemy_size)
+            ],
+            [
+                Vector2(0.75 * screen_size.x - 1.5 * enemy_size, screen_center.y),
+                Vector2(0, -enemy_size),
+                Vector2(0, enemy_size)
+            ],
+            [
+                Vector2(screen_size.x, 0.25 * screen_size.y - enemy_size),
+                Vector2(0, 2 * enemy_size),
+                Vector2()
+            ]
+        ],
     }
     curve_points['butterfly-1'] = _mirror_curve_horizontal(curve_points['bee-1'])
     curve_points['butterfly-2'] = _mirror_curve_horizontal(curve_points['boss-butterfly-1'])
@@ -179,9 +233,11 @@ func make_curve_points(screen, enemy):
     curve_points['butterfly-dive-right-1'] = _flip_curve_horizontal(curve_points['butterfly-dive-left-1'])
     curve_points['boss-dive-right-1'] = _flip_curve_horizontal(curve_points['boss-dive-left-1'])
     curve_points['return-right-1'] = _mirror_curve_horizontal(curve_points['return-left-1'])
+    curve_points['bee-challenge-right-1'] = _mirror_curve_horizontal(curve_points['bee-challenge-left-1'])
+    curve_points['bee-challenge-1'] = _mirror_curve_horizontal(curve_points['boss-butterfly-challenge-1'])
     curve_points['bee-dive-left-test'] = []
-    var offset = Vector2(32, 40)
-    for point in curve_points['boss-dive-left-1']:
+    var offset = Vector2()
+    for point in curve_points['boss-butterfly-challenge-1']:
         curve_points['bee-dive-left-test'].append([point[0] + offset, point[1], point[2]])
     return curve_points
 

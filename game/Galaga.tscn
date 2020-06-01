@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://game/Galaga.gd" type="Script" id=1]
 [ext_resource path="res://assets/audio/shoot.wav" type="AudioStream" id=2]
@@ -13,6 +13,7 @@
 [ext_resource path="res://assets/audio/enemy-kill.wav" type="AudioStream" id=11]
 [ext_resource path="res://assets/audio/player-kill.wav" type="AudioStream" id=12]
 [ext_resource path="res://assets/audio/level-start.wav" type="AudioStream" id=13]
+[ext_resource path="res://assets/audio/stage-over.wav" type="AudioStream" id=14]
 
 [node name="Galaga" type="Node2D"]
 script = ExtResource( 1 )
@@ -74,3 +75,6 @@ bus = "Sound Effects"
 [node name="LevelStart" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 13 )
 bus = "Music"
+
+[node name="GameOver" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )

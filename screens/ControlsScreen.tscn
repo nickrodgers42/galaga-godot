@@ -61,11 +61,13 @@ button_action = "pause"
 
 [node name="MusicToggle" parent="VBoxContainer" instance=ExtResource( 4 )]
 audio_bus = "Music"
+is_audio_enabled = true
 
 [node name="SoundEfffectsToggle" parent="VBoxContainer" instance=ExtResource( 4 )]
 margin_top = 100.0
 margin_bottom = 116.0
 audio_bus = "Sound Effects"
+is_audio_enabled = true
 
 [node name="BackButton" type="Button" parent="VBoxContainer"]
 margin_top = 120.0

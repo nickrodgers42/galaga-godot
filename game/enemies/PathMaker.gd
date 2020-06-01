@@ -17,6 +17,14 @@ var diving_paths = [
     "boss-dive-left-1",
     "boss-dive-right-1"
 ]
+
+var challenge_paths = [
+    "bee-challenge-left-1",
+    "bee-challenge-right-1",
+    "boss-butterfly-challenge-1",
+    "bee-challenge-1"
+]
+
 var path_continues = {
     "butterfly-dive-left-1" : "return-left-1",
     "butterfly-dive-right-1": "return-right-1",
@@ -130,7 +138,9 @@ func update_path_follows(delta, path_follow_dict, remove_parent=false):
             if path_follow.unit_offset == 1:
                 for child in path_follow.get_children():
                     path_follow.remove_child(child)
-                    if path_continues.has(path_name):
+                    if challenge_paths.has(path_name):
+                        child.is_alive = false
+                    elif path_continues.has(path_name):
                         follow_path(child, path_continues[path_name])
                     else:
                         add_child(child)
