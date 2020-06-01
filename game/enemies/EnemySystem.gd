@@ -35,10 +35,12 @@ var current_stage = 0
 var current_phase = 0
 var enemies = []
 var missile_timers = []
-var missile_timer_delay = 1
+var missile_timer_delay = 0.5
 var missile_spacing_delay = 0.15
 var global_frame = 0
 var phase_enemies_remaining = 0
+var enemy_size = 16
+var phase_enemies_to_shoot = 0
 
 var all_enemies_spawned = false
 var stage_complete = false
@@ -72,31 +74,71 @@ var stages = [
         Wave.new("Butterfly", 4, "butterfly-1", Vector2(), [
             Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
         ])
+    ],
+    [
+        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
+            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
+            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
+        ])
+    ],
+    [
+        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
+            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
+            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "bee-1", Vector2(), [
+            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
+            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
+            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
+            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
+        ])
+    ]],
+    [[
+        Wave.new("Butterfly", 4, "bee-1", Vector2(), [
+            Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
+        ]),
+        Wave.new("Bee", 4, "butterfly-1", Vector2(), [
+            Vector2(4,4), Vector2(4,5), Vector2(5,4), Vector2(5,5)
+        ])
+    ],
+    [
+        Wave.new("Boss", 4, "boss-butterfly-1", Vector2(0, -enemy_size / 2), [
+            Vector2(1,3), Vector2(1,4), Vector2(1,5), Vector2(1,6)
+        ]),
+        Wave.new("Butterfly", 4, "boss-butterfly-1", Vector2(0, enemy_size / 2), [
+            Vector2(2,3), Vector2(3,3), Vector2(2,6), Vector2(3,6)
+        ])
+    ],
+    [
+        Wave.new("Butterfly", 4, "butterfly-2", Vector2(0, -enemy_size / 2), [
+            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
+        ]),
+        Wave.new("Butterfly", 4, "butterfly-2", Vector2(0, enemy_size / 2), [
+            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
+        ])
+    ],
+    [
+        Wave.new("Bee", 4, "bee-1", Vector2(0, -enemy_size / 2), [
+            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
+        ]),
+        Wave.new("Bee", 4, "bee-1", Vector2(0, enemy_size / 2), [
+            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
+        ])
+    ],
+    [
+        Wave.new("Bee", 4, "butterfly-1", Vector2(0, -enemy_size / 2), [
+            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
+        ]),
+        Wave.new("Bee", 4, "butterfly-1", Vector2(0, enemy_size / 2), [
+            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
+        ])
     ]]
-#    [
-#        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
-#            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
-#            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
-#        ])
-#    ],
-#    [
-#        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
-#            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
-#            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
-#        ])
-#    ],
-#    [
-#        Wave.new("Bee", 8, "bee-1", Vector2(), [
-#            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
-#            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
-#        ])
-#    ],
-#    [
-#        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
-#            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
-#            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
-#        ])
-#    ]]
 ]
 
 func _ready():
@@ -167,7 +209,7 @@ func set_missile_timers(enemy, path_follow=null):
         missile_timers.append(timer)
 
 func run_stage(stage_number):
-    current_stage = stage_number % len(stages)
+    current_stage = int(abs(stage_number - 1)) % len(stages)
     current_phase = 0
     next_phase()
     phase_timer.start(phase_timer_length)
@@ -185,6 +227,7 @@ func next_phase():
     else:
         for wave in stages[current_stage][current_phase - 1]:
             phase_enemies_remaining += wave.num_enemies
+        phase_enemies_to_shoot = len(stages[current_stage][current_phase - 1])
         spawn_timer.start(spawn_timer_length)
 
 func update_frame():
@@ -202,15 +245,20 @@ func spawn_enemy():
                     enemy = Bee.instance()
                 elif wave.enemy_type == "Butterfly":
                     enemy = Butterfly.instance()
+                elif wave.enemy_type == "Boss":
+                    enemy = Boss.instance()
                 elif wave.enemy_type == "Boss-Butterfly":
-                    if len(wave.grid_positions) % 2 != 0:
+                    if phase_enemies_remaining % 2 != 0:
                         enemy = Boss.instance()
                     else:
                         enemy = Butterfly.instance()
                 enemy.moving = true
                 enemy.grid_position = grid_position
                 enemies.append(enemy)
-                $PathMaker.follow_path(enemy, wave.path_name, wave.follow_offset)
+                var path_follow = $PathMaker.follow_path(enemy, wave.path_name, wave.follow_offset)
+                if phase_enemies_to_shoot > 0 and current_stage != 0:
+                    set_missile_timers(enemy, path_follow)
+                    phase_enemies_to_shoot -= 1
     if phase_enemies_remaining <= 0:
         spawn_timer.stop()
 

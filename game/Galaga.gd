@@ -64,6 +64,7 @@ func kill_player():
 
 func _start_game():
     $HUD.set_stage_text("PLAYER 1")
+    $HUD.set_stage_badge(stage)
     var theme_song_length = $ThemeSong.stream.get_length()
 
     var show_player_timer = Timer.new()
@@ -79,7 +80,7 @@ func _start_game():
     var move_stars_timer = Timer.new()
     move_stars_timer.one_shot = true
     move_stars_timer.connect("timeout", self, "emit_signal", ["ship_flying"])
-    move_stars_timer.connect("timeout", $HUD, "set_stage_text", ["STAGE 1"])
+    move_stars_timer.connect("timeout", $HUD, "set_stage_text", ["STAGE %d" % stage])
     move_stars_timer.connect("timeout", move_stars_timer,"queue_free")
     add_child(move_stars_timer)
     move_stars_timer.start((theme_song_length / 2) + 1)
@@ -88,13 +89,13 @@ func _start_game():
     clear_text_timer.one_shot = true
     clear_text_timer.connect("timeout", $HUD, "clear_stage_text")
     clear_text_timer.connect("timeout", clear_text_timer, "queue_free")
+    clear_text_timer.connect("timeout", $EnemySystem, "run_stage", [stage])
     add_child(clear_text_timer)
 
     $ThemeSong.connect("finished", $Player, "set_can_shoot", [true])
     $ThemeSong.connect("finished", $EnemySystem/EnemyGrid, "set_moving", [true])
-    $ThemeSong.connect("finished", $EnemySystem, "run_stage", [stage])
-    $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE 1"])
-    $ThemeSong.connect("finished", clear_text_timer, "start", [stage])
+    $ThemeSong.connect("finished", $HUD, "set_stage_text", ["PLAYER 1\nSTAGE %d" % stage])
+    $ThemeSong.connect("finished", clear_text_timer, "start", [1])
     $ThemeSong.play()
 
 func transition_stage():
