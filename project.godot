@@ -68,7 +68,6 @@ config/icon="res://favicon.png"
 
 [autoload]
 
-Controller="*res://Controller.gd"
 CurvePoints="*res://game/enemies/CurvePoints.gd"
 
 [display]

@@ -74,31 +74,31 @@ var stages = [
         Wave.new("Butterfly", 4, "butterfly-1", Vector2(), [
             Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
         ])
+    ],
+    [
+        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
+            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
+            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
+        ])
+    ],
+    [
+        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
+            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
+            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "bee-1", Vector2(), [
+            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
+            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
+        ])
+    ],
+    [
+        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
+            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
+            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
+        ])
     ]],
-#    [
-#        Wave.new("Boss-Butterfly", 8, "boss-butterfly-1", Vector2(), [
-#            Vector2(1,3), Vector2(2,3), Vector2(1,4), Vector2(3,3),
-#            Vector2(1,5), Vector2(2,6), Vector2(1,6), Vector2(3,6)
-#        ])
-#    ],
-#    [
-#        Wave.new("Butterfly", 8, "butterfly-2", Vector2(), [
-#            Vector2(2,7), Vector2(2,8), Vector2(3,7), Vector2(3,8),
-#            Vector2(2,1), Vector2(2,2), Vector2(3,1), Vector2(3,2),
-#        ])
-#    ],
-#    [
-#        Wave.new("Bee", 8, "bee-1", Vector2(), [
-#            Vector2(4,6), Vector2(4,7), Vector2(5,6), Vector2(5,7),
-#            Vector2(4,2), Vector2(4,3), Vector2(5,2), Vector2(5,3)
-#        ])
-#    ],
-#    [
-#        Wave.new("Bee", 8, "butterfly-1", Vector2(), [
-#            Vector2(4,0), Vector2(4,1), Vector2(5,0), Vector2(5,1),
-#            Vector2(4,8), Vector2(4,9), Vector2(5,8), Vector2(5,9)
-#        ])
-#    ]],
     [[
         Wave.new("Butterfly", 4, "bee-1", Vector2(), [
             Vector2(2,4), Vector2(2,5), Vector2(3,4), Vector2(3,5)
